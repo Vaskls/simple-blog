@@ -4,20 +4,18 @@ Using NuxtJS, fastapi and postgresql
 
 install python requirements by 
 
-`cd backend
-pip install -r requirements.txt
-`
-run with
-`
-python3 start.py
-`
-don't forget to make .env in /backend folder with template provided
+`cd backend`<br/>
+`pip install -r requirements.txt`<br/>
+<br/>
+run with <br/>
+`python3 start.py`
+<br/>
+
+*don't forget to make .env in /backend folder with template provided*
 
 install nodejs requirements by
-`cd frontend 
-npm install
-`
-run with
-`
-npm run dev
-`
+`cd frontend` <br/>
+`npm install` <br/>
+<br/>
+run with <br/>
+`npm run dev`
