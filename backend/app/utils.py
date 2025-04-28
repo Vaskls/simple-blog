@@ -1,7 +1,8 @@
 from passlib.context import CryptContext
 import requests
 import random
-
+import json
+from .config import settings
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class Generate():
@@ -33,3 +34,37 @@ class Generate():
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return password_context.verify(plain_password, hashed_password)
+
+def filter_middleware(contents):
+    try:
+        payload = json.dumps({
+            "model": "deepseek/deepseek-chat:free",
+            "messages": [
+            {
+                "role": "user",
+                "content": f"""I'll provide you with comment. 
+            
+Your response should have all the offensive / racist / inappropriate / harmful / in-exclusive content replaced with appropriete numbers of "*" symbol. 
+EVERYTHING which's not not offensive should remain in your final response.
+DO NOT ADD ANYTHING ELSE EXCEPT ORIGINAL CONTENT POST FILTER IN YOUR RESPONSE.
+
+Contents for filtering: \n\n
+{contents}
+            """
+            }
+        ]})
+        response = requests.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {settings.openrouter_api_key}",
+                "Content-Type": "application/json",
+            },
+            
+            data=payload,
+        )
+        filtered_result = response.json()['choices'][0]['message']['content'] # if we don't get correct json it throws an error, so we don't filter anythng
+        print("OK")
+        return filtered_result
+    except Exception as e:
+        print(str(e))
+        return contents
