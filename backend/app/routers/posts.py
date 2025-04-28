@@ -7,7 +7,7 @@ from fastapi import APIRouter, status, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..database import get_db
-from ..utils import Generate
+from ..utils import Generate, filter_middleware
 from ..oauth2 import JWTToken
 from ..queries import Query
 from ..config import page_size
@@ -28,6 +28,11 @@ def create_post(post: schemas.PostIn, db: Session = Depends(get_db), current_use
         HTTPException(status_code=status.HTTP_401_UNAUTHORISED,
                     detail=f"You don't have permission to use this method")
     post_query = Query(db = db, model = models.Post)
+    print(post.dict())
+    post.contents = filter_middleware(post.contents)
+    print(post.contents)
+    print("CONTENTS FILTERED\n\n\n\n")
+
     post.by_user_id = user.id
     post_obj = post_query.create(**post.dict())
     post_obj.by_user = user

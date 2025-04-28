@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     algorithm: str
     access_token_expire_minutes: int
     jwt_refresh_secret_key: str
-
+    openrouter_api_key: str
     class Config:
         env_file = ".env"
 page_size = 10
